@@ -128,7 +128,9 @@
            .add( this.bInput )
            .change(function() { curve.update(); });
 
-        $(function() { curve.update(); });
+        $(function() {
+            curve.update();
+        });
     };
 
     $.ec.Base.prototype.hideGrid = function() {
@@ -333,7 +335,9 @@
             ( 4 * this.a * this.a * this.a + 27 * this.b * this.b ) === 0;
         // Order is important.
         this.roots = this.getRoots();
+        console.log('Base.prototype.recalcualte(): roots: %o', this.roots)
         this.plotRange = this.getPlotRange();
+        console.log('Base.prototype.recalcualte(): plotRange: %o', this.plotRange)
     };
 
     $.ec.Base.prototype.redraw = function() {
@@ -480,9 +484,12 @@
         var y2 = p2[ 1 ];
         var m;
 
+        console.log('addPoints(): p1: %o, p2: %o', p1, p2)
+
         if( x1 !== x2 ) {
             // Two distinct points.
             m = ( y1 - y2 ) / ( x1 - x2 );
+            console.log('addPoints(): m: %s', m)
         }
         else {
             if( y1 === 0 && y2 === 0 ) {
@@ -648,6 +655,8 @@
 
         var xVal = +xInput.val();
         var yVal = +yInput.val();
+        console.log('fixPointCoordinate(): xVal: %s, yVal: %s', xVal, yVal);
+
         var xPrevVal = +xInput.data( "prev" );
         var yPrevVal = +yInput.data( "prev" );
 
@@ -732,6 +741,7 @@
 
     $.ec.reals.Base.prototype.recalculate = function() {
         this.stationaryPoints = this.getStationaryPoints();
+        console.log('recalculate(): stationaryPoints, %o', this.stationaryPoints)
         $.ec.Base.prototype.recalculate.call( this );
     };
 
@@ -762,7 +772,9 @@
            .add( this.pyInput )
            .add( this.qxInput )
            .add( this.qyInput )
-           .change(function() { curve.update(); });
+           .change(function() {
+               curve.update();
+            });
     };
 
     $.ec.reals.PointAddition.prototype =
@@ -829,6 +841,7 @@
 
     $.ec.reals.PointAddition.prototype.recalculate = function() {
         this.r = this.addPoints( this.p, this.q );
+        console.log('PointAddition.prototype.recalculate(): x: %o, y: %o, r: %o', this.p, this.q, this.r)
         $.ec.reals.Base.prototype.recalculate.call( this );
     };
 
@@ -843,8 +856,14 @@
         $.ec.reals.Base.prototype.updateResults.call( this );
 
         if( this.r !== null ) {
-            this.rxInput.val( round10( this.r[ 0 ] ) );
-            this.ryInput.val( round10( this.r[ 1 ] ) );
+            const rx = this.r[0]
+            const ry = this.r[1]
+            const roundedX = round10(rx)
+            const roundedY = round10(ry)
+
+            console.log('updateResults(): rx: %s, roundedX: %s, ry: %s, roundedY: %s', rx, ry, roundedX, roundedY)
+            this.rxInput.val(roundedX);
+            this.ryInput.val(roundedY);
         }
         else {
             this.rxInput.val( "Inf" );
